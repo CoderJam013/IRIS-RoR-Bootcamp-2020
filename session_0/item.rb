@@ -8,7 +8,7 @@ class Item
 
   # TODO: Store quantity
   attr_accessor :name, :price, :category_id, :discount_rate,
-    :discount_deadline
+    :discount_deadline, :quantity
 
   def initialize(name: '', price: 0, quantity: 1, category_id: 4,
                  discount_rate: 0, discount_deadline: Time.now)
@@ -22,15 +22,21 @@ class Item
 
   # Returns a boolean value whether than item is discounted i.e. the
   # discount deadline has been crossed or not.
-  def discounted?
-    raise NotImplementedError # TODO
+  def discounted?()
+    return Time.now < @discount_deadline
   end
 
   # If the item is discounted, the current price is 
   # `price * (100 - discount rate) / 100`. Otherwise, it is same as the price.
   #
   # TODO: Implement instance method 'current_price'
-
+  def current_price()
+    if discounted?    
+      return @price * (100 - @discount_rate) / 100
+    else               
+      return @price
+    end
+  end
   # The stock price of item is defined as product of current price and
   # quantity.
   # 
@@ -41,5 +47,9 @@ class Item
   # Note: If there are no items for category, stock price for category
   # should be zero.
   def self.stock_price_by_category(items)
+    stock_prices = {}
+    CATEGORIES.each {|key,value| stock_prices[key] = 0}
+    items.each {|item| stock_prices[item.category_id] += item.quantity * item.current_price}
+    return stock_prices
   end
 end

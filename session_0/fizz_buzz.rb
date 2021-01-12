@@ -37,5 +37,17 @@
 # We will raise an `ArgumentError` exception to let the caller know that
 # their function arguments were incorrect.
 def fizz_buzz(n:, x: 3, y: 5)
-  raise NotImplementedError # TODO
+  if n < 0 || x<= 0 || y <= 0; raise ArgumentError; end
+  
+  output = []
+  
+  (1..n).each do |turn|;                  word = ""
+    
+    if turn % x == 0;                     word += "Fizz";       end
+    if turn % y == 0;                     word += "Buzz";       end
+    unless (turn % x) * (turn % y) == 0;  word = "%d" % turn;   end
+    
+    output.push(word)
+  end
+  return output
 end
