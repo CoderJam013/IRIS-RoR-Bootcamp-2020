@@ -23,7 +23,7 @@ class Item
   # Returns a boolean value whether than item is discounted i.e. the
   # discount deadline has been crossed or not.
   def discounted?()
-    return Time.now < @discount_deadline
+    return Time.now < discount_deadline
   end
 
   # If the item is discounted, the current price is 
@@ -31,11 +31,8 @@ class Item
   #
   # TODO: Implement instance method 'current_price'
   def current_price()
-    if discounted?    
-      return @price * (100 - @discount_rate) / 100
-    else               
-      return @price
-    end
+    return price * (100-discount_rate)/100 if discounted?
+    return price
   end
   # The stock price of item is defined as product of current price and
   # quantity.
@@ -49,7 +46,9 @@ class Item
   def self.stock_price_by_category(items)
     stock_prices = {}
     CATEGORIES.each {|key,value| stock_prices[key] = 0}
-    items.each {|item| stock_prices[item.category_id] += item.quantity * item.current_price}
+    items.each do |item| 
+      stock_prices[item.category_id] += item.quantity * item.current_price
+    end
     return stock_prices
   end
 end
